@@ -61,7 +61,7 @@ public class TaskService {
         if (updateTask.getPriority() != null) task.setTitle(String.valueOf(updateTask.getPriority()));
         if (updateTask.getDescription() != null) task.setTitle(updateTask.getDescription());
         log.info("La tâche a été correctement modifiée");
-        return task;
+        return taskRepo.save(task);
     }
 
     public void deleteTask(Long id) {
