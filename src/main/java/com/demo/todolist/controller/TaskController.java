@@ -1,6 +1,6 @@
 package com.demo.todolist.controller;
 import com.demo.todolist.model.Task;
-import com.demo.todolist.service.TaskService;
+import com.demo.todolist.serviceImpl.TaskServiceImpl;
 import com.demo.todolist.utils.Priority;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,24 +10,24 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/tasks")
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskServiceImpl taskService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskServiceImpl taskService) {
         this.taskService = taskService;
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String index() {
         return "Bienvenue dans mon application";
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<Task>> getAll(){
-       return ResponseEntity.ok(taskService.getAll());
+       return ResponseEntity.ok(taskService.getAllTasks());
     }
 
     @GetMapping("/tasks/id/{id}")
@@ -48,12 +48,12 @@ public class TaskController {
 
     @PostMapping("/tasks")
     public ResponseEntity<Task> createTask(@RequestBody Task postTask){
-        return ResponseEntity.ok(taskService.postTask(postTask));
+        return ResponseEntity.ok(taskService.createTask(postTask));
     }
 
     @PutMapping("/tasks/{id}")
     public ResponseEntity<Task> updateTask(@RequestBody Task task,@PathVariable Long id){
-        return ResponseEntity.ok(taskService.putTask(id, task));
+        return ResponseEntity.ok(taskService.updateTask(id, task));
     }
 
     @DeleteMapping("/tasks/{id}")

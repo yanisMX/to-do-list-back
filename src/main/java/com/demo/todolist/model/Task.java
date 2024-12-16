@@ -21,4 +21,8 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // Définit la clé étrangère
+    private User user;
 }
