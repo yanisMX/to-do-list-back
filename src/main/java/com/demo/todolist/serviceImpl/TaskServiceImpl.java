@@ -3,9 +3,13 @@ package com.demo.todolist.serviceImpl;
 
 import com.demo.todolist.exception.TaskNotFoundException;
 import com.demo.todolist.exception.TaskNotValidException;
+import com.demo.todolist.exception.UserNotFoundException;
+import com.demo.todolist.model.User;
 import com.demo.todolist.repository.TaskRepo;
 import com.demo.todolist.model.Task;
+import com.demo.todolist.repository.UserRepo;
 import com.demo.todolist.service.TaskService;
+import com.demo.todolist.service.UserService;
 import com.demo.todolist.utils.Priority;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +26,12 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private final TaskRepo taskRepo;
 
-    public TaskServiceImpl(TaskRepo taskRepo) {
+    @Autowired
+    private final UserService userService;
+
+    public TaskServiceImpl(TaskRepo taskRepo, UserService userService) {
         this.taskRepo = taskRepo;
+        this.userService = userService;
     }
 
     public List<Task> getAllTasks() {
@@ -48,12 +56,19 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    public Task createTask(Task task) {
+    public Task createTask(Task task, Long id) {
+        User user = this.userService.getUserById(id);
+
         if (task.getTitle().isEmpty() || task.getDescription().isEmpty() || !validatePriority(task.getPriority())) {
             throw new TaskNotValidException("Vous devez remplir tous les champs");
         }
-        log.info("La tâche a été correctement sauvegardée");
-        return taskRepo.save(task);
+        Task taskCreated = new Task();
+        taskCreated.setTitle(task.getTitle());
+        taskCreated.setDescription(task.getDescription());
+        taskCreated.setPriority(task.getPriority());
+        taskCreated.setUser(user);
+        log.info("La tâche a été correctement sauvegardée" + user.getUsername());
+        return taskRepo.save(taskCreated);
     }
 
     public Task updateTask(Long id, Task updateTask) {

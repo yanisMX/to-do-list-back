@@ -1,5 +1,6 @@
 package com.demo.todolist.service;
 
+import com.demo.todolist.model.Task;
 import com.demo.todolist.model.User;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public interface UserService {
     User getUserById(Long id);
     User updateUser(Long id, String user);
     void deleteUser(Long id);
+    List<Task> getTasksByUser(Long id);
 
 
 }

@@ -2,6 +2,7 @@ package com.demo.todolist.serviceImpl;
 
 import com.demo.todolist.exception.UserNotFoundException;
 import com.demo.todolist.exception.UserNotValidException;
+import com.demo.todolist.model.Task;
 import com.demo.todolist.model.User;
 import com.demo.todolist.repository.UserRepo;
 import com.demo.todolist.service.UserService;
@@ -44,14 +45,19 @@ public class UserServiceImpl implements UserService {
         if (oldUsername != null) {
             oldUser.setUsername(newUsername);
         }
-        // TODO : continuer la logique
         log.info("L'utilisateur a été modifié");
         return oldUser;
     }
 
     public void deleteUser(Long id) {
+        this.userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         this.userRepo.deleteById(id);
         log.info("L'utilisateur a été supprimé");
+    }
+
+    public List<Task> getTasksByUser(Long id){
+       User user = this.userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+       return user.getTasks();
     }
 
     private boolean testUserValidity(User user) {

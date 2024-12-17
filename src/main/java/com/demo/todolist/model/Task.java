@@ -23,6 +23,6 @@ public class Task {
     private Priority priority;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false) // Définit la clé étrangère
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

@@ -1,5 +1,8 @@
 package com.demo.todolist.controller;
 import com.demo.todolist.model.Task;
+import com.demo.todolist.model.User;
+import com.demo.todolist.service.TaskService;
+import com.demo.todolist.service.UserService;
 import com.demo.todolist.serviceImpl.TaskServiceImpl;
 import com.demo.todolist.utils.Priority;
 import org.springframework.http.ResponseEntity;
@@ -10,13 +13,16 @@ import java.util.List;
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/v1/tasks")
 public class TaskController {
 
-    private final TaskServiceImpl taskService;
+    private final TaskService taskService;
+    private final UserService userService;
 
-    public TaskController(TaskServiceImpl taskService) {
+    public TaskController(TaskServiceImpl taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
 
@@ -45,10 +51,10 @@ public class TaskController {
         }
     }
 
-
-    @PostMapping("/tasks")
-    public ResponseEntity<Task> createTask(@RequestBody Task postTask){
-        return ResponseEntity.ok(taskService.createTask(postTask));
+    @PostMapping("/create")
+    public ResponseEntity<Task> createTask(@RequestBody Task postTask, @RequestParam("userId") Long userId){
+        this.taskService.createTask(postTask, userId);
+        return ResponseEntity.ok(postTask);
     }
 
     @PutMapping("/tasks/{id}")
